@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/robertkrimen/otto/ast"
-	"github.com/robertkrimen/otto/parser"
+	"github.com/EncoreJiang/otto/ast"
+	"github.com/EncoreJiang/otto/parser"
 )
 
 type _global struct {
@@ -289,6 +289,17 @@ var typeOfValue = reflect.TypeOf(Value{})
 // If the conversion fails due to overflow or type miss-match then it panics.
 // If no conversion is known then the original value is returned.
 func (self *_runtime) convertCallParameter(v Value, t reflect.Type) reflect.Value {
+	cv := self.rawConvertCallParameter(v, t)
+	ct := cv.Type()
+	if ct != t {
+		if ct.ConvertibleTo(t) {
+			cv = cv.Convert(t)
+		}
+	}
+	return cv
+}
+
+func (self *_runtime) rawConvertCallParameter(v Value, t reflect.Type) reflect.Value {
 	if t == typeOfValue {
 		return reflect.ValueOf(v)
 	}

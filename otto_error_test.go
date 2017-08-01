@@ -7,8 +7,13 @@ import (
 func TestOttoError(t *testing.T) {
 	tt(t, func() {
 		vm := New()
+		vm.Set("panic", func(call FunctionCall) Value {
+			panic(call.Argument(0).String())
+		})
+		_, err := vm.Run(`panic("Xyzzy")`)
+		is(err, "Xyzzy")
 
-		_, err := vm.Run(`throw "Xyzzy"`)
+		_, err = vm.Run(`throw "Xyzzy"`)
 		is(err, "Xyzzy")
 
 		_, err = vm.Run(`throw new TypeError()`)

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/robertkrimen/otto/file"
+	"github.com/EncoreJiang/otto/file"
 )
 
 type _exception struct {
@@ -244,7 +244,8 @@ func catchPanic(function func()) (err error) {
 				err = errors.New(caught.string())
 				return
 			}
-			panic(caught)
+
+			err = fmt.Errorf("%v", caught)
 		}
 	}()
 	function()
