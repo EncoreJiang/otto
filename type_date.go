@@ -125,7 +125,7 @@ func epochToTime(value float64) (time Time.Time, err error) {
 	epoch := int64(epochWithMilli / 1000)
 	milli := int64(epochWithMilli) % 1000
 
-	time = Time.Unix(int64(epoch), milli*1000000).UTC()
+	time = Time.Unix(int64(epoch), milli*1000000).Local()
 	return
 }
 
