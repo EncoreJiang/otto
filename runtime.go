@@ -443,6 +443,13 @@ func (self *_runtime) rawConvertCallParameter(v Value, t reflect.Type) reflect.V
 					}
 				}
 
+				defer func() {
+					if r := recover(); r != nil {
+						panic(&_exception{
+							value: newError(self, "GoError", 0, fmt.Sprint(r)),
+						})
+					}
+				}()
 				rv, err := v.Call(nullValue, l...)
 				if err != nil {
 					panic(err)
@@ -607,6 +614,13 @@ func (self *_runtime) toValue(value interface{}) Value {
 						in[i] = self.convertCallParameter(a, t)
 					}
 
+					defer func() {
+						if r := recover(); r != nil {
+							panic(&_exception{
+								value: newError(self, "GoError", 0, fmt.Sprint(r)),
+							})
+						}
+					}()
 					var out []reflect.Value
 					if callSlice {
 						out = value.CallSlice(in)
